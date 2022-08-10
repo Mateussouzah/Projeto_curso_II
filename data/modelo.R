@@ -8,4 +8,4 @@ modelo <- lm(mpg ~ coluna_regressao, data = mtcars_modelo)
 
 # Lendo dados trabalhadaços
 
-#ajustar
+#ajustado
