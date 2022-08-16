@@ -160,4 +160,40 @@ pivot_longer(
 ) %>% View
 
 
+# Ator com maior lucro médio
+
+imdb %>%
+  separate(col = elenco,into = c("elenco1", "elenco2", "elenco3"),
+           sep = ", ") %>%
+
+
+pivot_longer(cols = starts_with("elenco"),
+             names_to = "ordem",
+             values_to = "nome_pessoa" ) %>%
+  mutate(lucro =  receita - orcamento) %>%
+  drop_na(lucro) %>%
+  group_by(nome_pessoa) %>%
+  summarise(lucro_medio = mean(lucro), n_filmes = n()) %>%
+  arrange(desc(lucro_medio)) %>%
+  filter(n_filmes > 10) %>%
+  View()
+
+# separate_rows--------------------------------------------------------------------
+#separa direto o elenco em forma de pivot_longer
+
+imdb %>%
+  separate_rows(elenco, sep = ", ") %>%
+
+  mutate(lucro =  receita - orcamento) %>%
+  drop_na(lucro) %>%
+  group_by(elenco) %>%
+  summarise(lucro_medio = mean(lucro), n_filmes = n()) %>%
+  arrange(desc(lucro_medio)) %>%
+  filter(lucro_medio > 10) %>%
+  View()
+
+
+
+
+
 
