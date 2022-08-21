@@ -57,8 +57,57 @@ regex_email <- "[a-zA-Z0-9_.-]{1,100}@[a-zA-Z0-9]{1,100}\\.com\\.br"
 regex_email_2 <- "[a-zA-Z0-9_.-]{1,100}@[a-zA-Z0-9]{1,100}\\.org"
 regex_email_3 <- "[a-zA-Z0-9_.-]{1,100}@[a-zA-Z0-9]{1,100}\\.com"
 
-regex_email_final <- str_c(regex_email, "|", regex_email_2, "|", regex_email_3)
+regex_email_final <- str_c(regex_email, regex_email_2, regex_email_3, sep = "|")
 
 str_view(vetor_de_email, regex_email_final)
+
+#str_extract--------------------------------------------------------------------------------------------------
+# extrai os dados
+
+
+# primeira tentativa
+regex_email_lucas <- "[a-zA-Z0-9._-]{0,100}@[^ ]+"
+
+str_extract(vetor_de_email, regex_email_lucas)
+
+#segunda tentativa
+
+regex_email_lucas <- "[a-zA-Z0-9._-]+@[^ ]+[a-zA-Z0-9]"
+
+# telefone
+
+regex_tel <- "(\\+[0-9]{2}\\([0-9]{2}\\) )?[0-9]{4,5}-[0-9]{4}"# \\ para interpretar literalmente o que vem depois
+
+tel <- c("Meu telefone é: 98161-6517, eo telefone da lili é 3243-4559 ",
+         "O telefone gringo é: +78(34) 3442-7765 ",
+         "his tel is: +55(51) 97342-9588")
+
+str_extract_all(tel, regex_tel)
+
+# str_replace-----------------------------------------------------------------------------------------------
+
+str_replace_all(tel, regex_tel, "TELEFONE")# Substituir,  util para fazer limpeza
+
+texto_zoado <- c("texto com      espaços  a mais",
+                 "      texto que começa com espaços",
+                 "COMEÇO INUTIL: conteudo")
+str_view_all(texto_zoado, "  +")
+
+texto_limpo <- texto_zoado %>%
+  str_replace("  +", " ") %>%
+  #esse poderia ser str_squish
+
+   str_replace("^ +", "") %>%
+   #esse poderia ser str_remove
+  # str_remove("^ +")
+  #    ou
+  #str_trim
+
+  str_replace("COMEÇO INUTIL: ", "")
+
+str_split(texto_limpo, pattern = "[._@]+")#quebrando o texto
+
+
+str_count(texto_limpo, "o") #quanta vezes apareceu "o"
 
 
