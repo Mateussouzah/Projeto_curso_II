@@ -107,7 +107,70 @@ texto_limpo <- texto_zoado %>%
 
 str_split(texto_limpo, pattern = "[._@]+")#quebrando o texto
 
+#----------------------------------------------------------------------------------
+
+texto_bruto <- "Autor: \n\n\n\n\t\t\t Justiça Pública"
 
 str_count(texto_limpo, "o") #quanta vezes apareceu "o"
+
+regex_autor <- "Autor: +([:space:]|\n)+"
+
+str_remove_all(texto_bruto, regex_autor)
+
+str_to_lower("eU TI Amo")
+
+str_to_upper("oLa mUNdo!")
+
+str_to_title("nivel de emergencia 4")
+
+
+
+stringi::stri_trans_general("VáriÔs àcêntôs", "Latin-ASCII")# Tirar acentos
+
+
+#Aula Prática----------------------------------------------------------------------------------------------------
+
+library(tidyverse)
+
+imdb <- read_csv("https://raw.githubusercontent.com/curso-r/main-r4ds-1/master/dados/imdb.csv")
+
+
+# Motivação: Descobrir a quantos gêneros cada filme pertence
+
+
+imdb %>%
+  mutate(num_generos = str_count(generos, pattern = ",")+ 1
+
+  ) %>%
+  select(generos, num_generos) %>%
+  View()
+
+# Motivação: Extrair o subtítulo dos filmes
+
+imdb %>%
+  mutate(subtitulo = str_extract(titulo, ": .*")) %>%
+  drop_na(subtitulo) %>%
+  mutate(subtitulo = str_remove(subtitulo, ": ")) %>%
+  select(titulo, subtitulo) %>%
+  View()
+
+# Motivação: Criar uma tebela cujo o título começe apenas com números
+
+imdb %>%
+  mutate(titulo_num = str_extract(titulo, "^[0-9]{0,100} .*")) %>%
+  drop_na(titulo_num) %>%
+  select(titulo, titulo_num) %>%
+  View()
+
+# Se quizesse só filtrar
+
+imdb %>%
+  filter(str_detect(titulo, "^[0-9]")) %>% # ^ Esta pedindo para começar com números
+  View()
+
+
+
+
+
 
 
