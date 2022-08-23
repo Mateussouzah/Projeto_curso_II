@@ -170,6 +170,75 @@ imdb %>%
 
 
 
+# Motivação: Criar uma tabela onde apenas Josh Hutcherson faz parte do elenco
+
+imdb %>%
+  filter(
+    str_detect(elenco, pattern = "Josh Hutcherson")
+  ) %>%
+  select(titulo, elenco) %>%
+  View()
+
+
+
+# Motivação: Criar uma tabela onde  Josh Hutcherson ou Jennifer Lawrence fazem parte do elenco
+
+imdb %>%
+  filter(
+    str_detect(elenco, pattern = "Josh Hutcherson |Jennifer Lawrence")
+  ) %>%
+  select(titulo, elenco) %>%
+  View()
+
+# Motivação: Criar uma tabela onde  Josh Hutcherson e Jennifer Lawrence fazem parte do elenco
+
+imdb %>%
+  filter(
+    str_detect(elenco, "Josh Hutcherson"),
+    str_detect(elenco, "Jennifer Lawrence")
+  ) %>%
+  select(titulo, elenco) %>%
+  View()
+
+# Motivação: Criar uma tabela onde  Josh Hutcherson e Jennifer Lawrence não estajam junto nos filmes
+
+imdb %>%
+  mutate(
+    josh =  str_detect(elenco, "Josh Hutcherson"),
+    jennifer = str_detect(elenco, "Jennifer Lawrence")
+  ) %>%
+  filter((josh == FALSE & jennifer == TRUE) | (josh & !jennifer) ) %>%
+  select(titulo, josh, jennifer) %>%
+  view()
+#--------------------------------------------------------------------------------------------
+
+# Motivação: Baixando e Limpando dados de Rick and Morty
+
+
+# ## scrape ##-----------------------------------------------------------------------------------
+
+install.packages("httr")
+
+url <- "https://en.wikipedia.org/wiki/List_Of_Rick_and_Morty_episodes"
+
+res <- httr::GET(url)
+
+wiki_page <- httr::content(res)
+
+
+lista_tab <- wiki_page %>%
+  xml2::xml_find_all(".//table") %>%
+  magrittr::extract(2:6) %>%
+  rvest::html_table(fill = TRUE) %>%
+  purrr::map(janitor::clean_names) %>%
+  purrr::map(~dplyr::rename_with(.x,~stringr::str_remove(.x, "_37|_3")))
+
+num_temporadas <- 1:length(lista_tab)
+
+tab <- lista_tab %>%
+  purrr::map2(num_temporadas, ~dplyr::mutate(.x, no_season = .y)) %>%
+  dplyr::blind_rows()
+
 
 
 
